@@ -78,8 +78,64 @@ const App = () => {
 ```
 
 ## 3. useCallback()
-**Usage**: <br/>
+**Usage**: Suppose we have a page that has many states and you have some high-computation function that runs every single time you change another state. So you have to execute this function only when something happens called *"dependencies"* <br />
+
+**Explaining Of Code**: 
+1. `ListItems` component takes the `getItems` function that gets the items values <br />
+2. `Test` Component has two states `dark` and `input`
+3. `dark` state for toggling the theme after clicking the HTML button.
+4. `input` state changing the list items values to `[input, input + 1, input + 2]`
+5. The `getItems` function that we have used `useCallback` on will only be executed when the `input` state changes so this `getItems` function will never be executed if the `dark` state changes.
+6. Try to remove the `useCallback` and run the code then use the `console` to notice the difference. 
+
+**Return**: The whole function inside the `useCallback` <br/>
 
 **Code**: 
 ```jsx
+'use client';
+
+import { useEffect, useCallback, useState } from "react";
+
+const ListItems = ({ getItems }) => {
+
+  const [items, setItems] = useState([])
+
+  useEffect(() => {
+    console.log('Updating:')
+    setItems(getItems())
+  }, [getItems])
+
+  return (
+    <div>
+      {items.map(item => <div>{item}</div>)}
+    </div>
+  );
+}
+ 
+
+const Test = () => {
+
+  const [input, setInput] = useState(1)
+  const [dark, setDark] = useState(false)
+
+  const theme = {
+    backgroundColor: dark ? '#000' : '#FFf',
+    color: dark ? '#fff' : '#000'
+  }
+
+  const getItems = useCallback(() => {
+    return [input, input + 1, input + 2]
+  }, [input])
+
+  return (
+    <div className='theme' style={theme}>
+
+      <input value={input} onChange={ e => setInput(parseInt(e.target.value)) } />
+      <button className='block bg-teal-500 text-white' onClick={ () => setDark(!dark) }>Toggle theme</button>
+      <ListItems getItems={getItems} />
+    </div>
+  );
+}
+ 
+export default Test;
 ```
