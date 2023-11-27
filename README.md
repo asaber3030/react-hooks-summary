@@ -129,7 +129,6 @@ const Test = () => {
 
   return (
     <div className='theme' style={theme}>
-
       <input value={input} onChange={ e => setInput(parseInt(e.target.value)) } />
       <button className='block bg-teal-500 text-white' onClick={ () => setDark(!dark) }>Toggle theme</button>
       <ListItems getItems={getItems} />
