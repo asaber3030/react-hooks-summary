@@ -8,6 +8,7 @@
 5. useOptimistic()
 6. useImperativeHandle()
 7. useDeferredValue()
+8. useContext()
 
 ## 1. useTransition()
 **Usage**: If you have many states in the app and some of them have high priority and some have low priority we can use `useTransition` hook to handle the low-priority states that may have high computations <br />
@@ -336,4 +337,36 @@ const Test = () => {
 }
  
 export default Test;
+```
+
+## 8. useContext()
+**Usage**: Suppose we have some global states and you want to share them across your application you can use props but this will cause some much nesting. <br />
+
+Here's an examples<br/>
+**Code**:
+```jsx
+import { useContext, createContext, useState } from "react";
+
+const UserContext = createContext()
+
+const UserLayout = () => {
+  const user = useContext(UserContext)
+
+  return (
+    <>
+      <h1>Name is <b>{user.name}</b></h1>
+      <p>{user.age} years old</p>
+    </>
+  )
+}
+
+const App = () => {
+  return (
+    <UserContext.Provider value={{ name: 'Abdulrahman', age: 15 }}>
+      <UserLayout />
+    </UserContext.Provider>
+  );
+}
+ 
+export default App;
 ```
