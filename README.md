@@ -5,10 +5,8 @@
 2. used()
 3. useCallback()
 4. useMemo()
-5. useEffectLayout()
-6. useSyncExternalResource()
-7. useOptimistic()
-8. useImperativeHandle()
+5. useOptimistic()
+6. useImperativeHandle()
 
 ## 1. useTransition()
 **Usage**: If you have many states in the app and some of them have high priority and some have low priority we can use `useTransition` hook to handle the low-priority states that may have high computations <br />
@@ -207,4 +205,61 @@ const Test = () => {
 }
  
 export default Test;
+```
+
+## 5. useOptimistic()
+**Usage**: The `useOptimistic` Hook provides a way to optimistically update the user interface before a background operation, like a network request, completes. In the context of forms, this technique helps to make apps feel more responsive. When a user submits a form, instead of waiting for the server’s response to reflect the changes, the interface is immediately updated with the expected outcome. <br />
+
+**Explain**: We have a list of todos we can add a new todo using the simple button and input HTML elements. Using a promise to wait for the response we can see that we wait 2500 milliseconds to get the actual response to simulate a server request or something. <br/>
+After we `createTodo` we can see immediately the expected result shows up and there are no 2.5 secs to wait. As I mentioned in the usage above!
+
+**Code**:
+```jsx
+'use client';
+
+import { useOptimistic, useRef, useState } from "react";
+
+const InitialTodos = ({ initialTodos }) => {
+
+  const [todos, setTodos] = useState(initialTodos)
+  const [opTodos, setOpTodos] = useOptimistic(todos)
+
+  const inputRef = useRef(null)
+
+  async function onSubmit(event) {
+    event.preventDefault()
+
+    if (inputRef.current == null) return 
+
+    setOpTodos(prev => [
+      ...prev,
+      { id: Math.random(), title: inputRef.current.value, }
+    ])
+    const newTodo = await createTodo(inputRef.current.value) 
+    setTodos(prev => [...prev, newTodo])
+  }
+
+  return (
+    <form onSubmit={onSubmit}>
+      <input ref={inputRef} required />
+      <button type='submit'>Create</button>
+      <ul>
+        {opTodos.map(todo => <li key={todo.id}>{todo.title}</li>)}
+      </ul>
+    </form>
+  )
+
+}
+
+
+function createTodo(title) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      return { id: Math.random(), title: title }
+    }, 2500)
+  })
+}
+
+
+export default InitialTodos;
 ```
