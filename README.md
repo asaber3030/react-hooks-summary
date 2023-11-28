@@ -138,3 +138,41 @@ const Test = () => {
  
 export default Test;
 ```
+
+## 4. useMemo()
+**Usage**: Memo stands for memoization which means caching a value so the application doesn't have to compute it every single render of the app. Its usage is similar to `useCallback` <br/>
+
+**Returns**: The value of the function inside `useMemo` <br/>
+
+**Code**:
+```jsx
+import { useEffect, useMemo, useState } from "react";
+
+const Test = () => {
+
+  const [num, setNum] = useState(0)
+  const [dark, setDark] = useState(false)
+
+  const doubleNum = useMemo(() => slowComputation(num), [num])
+
+  const theme = {
+    backgroundColor: dark ? '#000' : '#FFF',
+    color: dark ? '#fff' : '#000'
+  }
+
+  return (
+    <div style={theme}>
+      <input value={num} type='number' onChange={ e => setNum(parseInt(e.target.value)) } />
+      <button onClick={ () => setDark(!dark) }>Toggle</button>
+      <h1 className='font-bold text-4xl'>{doubleNum}</h1>
+    </div>
+  );
+}
+
+function slowComputation(num) {
+  for (let i = 0; i <= 1000000000; i++) {}
+  return num * 2
+}
+ 
+export default Test;
+```
