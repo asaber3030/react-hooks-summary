@@ -176,3 +176,35 @@ function slowComputation(num) {
  
 export default Test;
 ```
+There's another usage of `useMemo` something called ***Referential Equality*** suppose you `theme` object and `num` state and you have `useEffect` the printing out "Theme changed" after the `theme` object updated... So what's the scenario? If you changed the `num` state as well you will have "Theme changed" in the console that's because of ***Referential Equality*** in JS. <br />
+
+Here's how to solve the problem try with your self
+```jsx
+import { useEffect, useMemo, useState } from "react";
+
+const Test = () => {
+
+  const [num, setNum] = useState(0)
+  const [dark, setDark] = useState(false)
+
+  const theme = useMemo(() => {
+    return {
+      backgroundColor: dark ? '#000' : '#FFF',
+      color: dark ? '#fff' : '#000'
+    }
+  }, [dark])
+
+  useEffect(() => {
+    console.log('Theme changed')
+  }, [theme])
+
+  return (
+    <div style={theme}>
+      <input value={num} type='number' onChange={ e => setNum(parseInt(e.target.value)) } />
+      <button onClick={ () => setDark(!dark) }>Toggle</button>
+    </div>
+  );
+}
+ 
+export default Test;
+```
