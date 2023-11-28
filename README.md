@@ -7,6 +7,7 @@
 4. useMemo()
 5. useOptimistic()
 6. useImperativeHandle()
+7. useDeferredValue()
 
 ## 1. useTransition()
 **Usage**: If you have many states in the app and some of them have high priority and some have low priority we can use `useTransition` hook to handle the low-priority states that may have high computations <br />
@@ -298,6 +299,38 @@ const Test = () => {
       <CustomInput ref={inRef} />
       <button onClick={ () => inRef.current.alertSomething() }>Alert</button>
       <button onClick={ () => inRef.current.alertSomething() }>Console</button>
+    </div>
+  );
+}
+ 
+export default Test;
+```
+
+## 7. useDeferredValue()
+**Usage**: Let's say you have an Input that you type something and render a new list after typing something so if you have some high computation function that takes time if you type something bigger that will cause some issues on performance so we use `useDeferredValue ` to make sure there's enough time between every character and the next character to update the list. <br/>
+
+**Code**:
+```jsx
+import { useDeferredValue, useMemo, useState } from "react";
+
+const Test = () => {
+
+  const [input, setInput] = useState()
+  const deferredInput = useDeferredValue(input)
+  const list = useMemo(() => {
+    const l = []
+    for (let i = 0; i <= 10000; i++) {
+      l.push(<li key={i}>{deferredInput}</li>)
+    }
+    return l;
+  }, [deferredInput])
+
+  return (
+    <div>
+      <input value={input} onChange={ e => setInput(e.target.value) } />
+      <ul>
+        {list.map(i => i)}
+      </ul>
     </div>
   );
 }
