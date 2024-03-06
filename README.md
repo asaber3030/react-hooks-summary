@@ -2,7 +2,7 @@
 
 ## Table of contents
 1. useTransition()
-2. used()
+2. useId()
 3. useCallback()
 4. useMemo()
 5. useOptimistic()
