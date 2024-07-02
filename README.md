@@ -58,7 +58,7 @@ const PasswordComponent = () => {
 
   return (
     <>
-      <label for={`password-${id}`}></label>
+      <label htmlFor={`password-${id}`}></label>
       <input value={input} onChange={handleInput} id={`password-${id}`} />
     </>
   )
